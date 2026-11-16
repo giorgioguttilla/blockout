@@ -1,0 +1,36 @@
+{
+  "name": "blockout",
+  "version": "0.1.0",
+  "description": "Semantic 3D level sketching for AI-driven level building",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "blockout": "bin/blockout.mjs"
+  },
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build && npm run build:cli",
+    "build:cli": "esbuild cli/main.ts --bundle --platform=node --format=esm --main-fields=module,main --conditions=module,import --outfile=bin/cli.mjs --log-level=warning --alias:\\$lib=./src/lib",
+    "start": "node bin/blockout.mjs",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "three": "^0.187.0",
+    "three-bvh-csg": "^0.0.18",
+    "three-mesh-bvh": "^0.9.18"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-node": "^6.0.2",
+    "@sveltejs/kit": "^3.2.0",
+    "@sveltejs/vite-plugin-svelte": "^7.3.1",
+    "@types/node": "^26.6.6",
+    "@types/three": "^0.187.0",
+    "esbuild": "^0.28.2",
+    "svelte": "^5.57.3",
+    "svelte-check": "^4.7.8",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0"
+  }
+}

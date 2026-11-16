@@ -1,0 +1,6 @@
+node_modules
+build
+.svelte-kit
+bin/cli.mjs
+.DS_Store
+*.log
