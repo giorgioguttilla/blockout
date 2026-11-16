@@ -2,6 +2,8 @@
   import { onMount } from 'svelte';
   import { editor } from '$lib/editor/editor.svelte';
   import Welcome from '$lib/ui/Welcome.svelte';
+  import WebWelcome from '$lib/ui/WebWelcome.svelte';
+  import { WEB } from '$lib/editor/api';
   import EditorShell from '$lib/ui/EditorShell.svelte';
   import Toasts from '$lib/ui/Toasts.svelte';
   let error = $state('');
@@ -15,7 +17,7 @@
 {:else if !editor.ready}
   <div class="boot"><div class="spinner"></div></div>
 {:else if !editor.root}
-  <Welcome />
+  {#if WEB}<WebWelcome />{:else}<Welcome />{/if}
 {:else}
   <EditorShell />
 {/if}

@@ -6,6 +6,7 @@
   import { AXES, ENGINE_PRESETS, conventionProblem, engineYaw, fmtAngle, handedness, presetKey, sameConvention, toEnginePos, type Axis, type EngineConvention } from '$lib/model/engine';
   import Modal from './Modal.svelte';
   import NumField from './NumField.svelte';
+  import { WEB } from '$lib/editor/api';
 
   const p = $derived(editor.project);
   const c = $derived(p.character);
@@ -110,7 +111,7 @@
       </div>
     </div>
   </div>
-  <div class="faint small">These numbers live in <code>{editor.root}/game-settings.md</code> — plain <code>- key: value</code> lines your game-building agent can edit directly. Changes there show up here live.</div>
+  <div class="faint small">These numbers live in <code>{WEB ? editor.rootLabel : editor.root}/game-settings.md</code> — plain <code>- key: value</code> lines your game-building agent can edit directly. Changes there show up here live.</div>
 </Modal>
 
 <style>

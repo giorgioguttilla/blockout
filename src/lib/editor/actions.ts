@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { editor, TOOL_INFO, type ToolName } from './editor.svelte';
-import { api } from './api';
+import { api, WEB } from './api';
 import { analyze } from '$lib/traversal/analysis';
 import { WalkMode } from '$lib/traversal/walk';
 import { buildBrief, buildChanges, handoffPrompt } from '$lib/model/brief';
@@ -263,7 +263,10 @@ export async function handoff(kind: 'brief' | 'changes', message = '') {
   const { dir } = await api.handoff(editor.levelId, files);
   const levelDir = dir.replace(/[\/\\]handoff$/, '');
   const effectiveKind = kind === 'changes' && baseline ? 'changes' : 'brief';
-  const prompt = handoffPrompt(levelDir, effectiveKind);
+  let prompt = handoffPrompt(levelDir, effectiveKind);
+  if (WEB && editor.root?.startsWith('idb:')) {
+    prompt = `Unzip ${editor.levelId}-handoff.zip (downloaded from Blockout) into the repo's design folder. ` + handoffPrompt(`design/levels/${editor.levelId}`, effectiveKind);
+  }
   files.push({ name: 'PROMPT.txt', text: prompt });
   await api.handoff(editor.levelId, [{ name: 'PROMPT.txt', text: prompt }]);
   editor.handoffResult = { dir, prompt, kind: effectiveKind, summary, images: shots.map(([, u]) => u) };

@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { editor, TOOL_INFO, type ToolName } from '$lib/editor/editor.svelte';
   import * as A from '$lib/editor/actions';
-  import { api } from '$lib/editor/api';
+  import { api, WEB } from '$lib/editor/api';
 
   interface Cmd { label: string; hint?: string; group: string; run: () => void; color?: string }
   let q = $state('');
@@ -46,7 +46,7 @@
       { group: 'Level', label: 'Save version…', hint: '⌘S', run: () => editor.openModal('save-version') },
       { group: 'Level', label: 'New level…', run: () => editor.openModal('new-level') },
       { group: 'Level', label: 'Duplicate level as variant', run: () => editor.branchVersion(null) },
-      { group: 'Level', label: 'Show project folder in Finder', run: () => api.reveal() },
+      ...(WEB ? [] : [{ group: 'Level', label: 'Show project folder in Finder', run: () => api.reveal() }]),
       { group: 'Project', label: 'Project & character settings…', run: () => editor.openModal('settings') },
       { group: 'Project', label: 'Tag library…', run: () => editor.openModal('tags') },
       { group: 'Project', label: 'Keyboard shortcuts', hint: '?', run: () => editor.openModal('help') },

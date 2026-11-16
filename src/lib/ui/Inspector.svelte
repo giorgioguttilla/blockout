@@ -5,6 +5,7 @@
   import { innerRadius, outerFromInner, shapeName, slopeInfo, taperOf } from '$lib/model/shapes';
   import { worldBounds } from '$lib/model/space';
   import NumField from './NumField.svelte';
+  import { WEB } from '$lib/editor/api';
   import TagInput from './TagInput.svelte';
   import Icon from './Icon.svelte';
 
@@ -312,7 +313,7 @@
     <section class="stats">
       <div class="st">Contents</div>
       <div class="faint">{levelStats.shape ?? 0} shapes · {levelStats.marker ?? 0} markers · {levelStats.path ?? 0} paths · {levelStats.stamp ?? 0} stamps · {levelStats.note ?? 0} notes</div>
-      <div class="faint small mono">{editor.root}/levels/{editor.levelId}/level.json</div>
+      <div class="faint small mono">{WEB ? editor.rootLabel : editor.root}/levels/{editor.levelId}/level.json</div>
     </section>
     <section class="tips">
       <div class="st">Quick start</div>

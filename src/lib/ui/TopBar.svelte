@@ -49,7 +49,7 @@
           <button class="mi" onclick={newLevel}><Icon name="plus" size={14} /> New level…</button>
           <button class="mi" onclick={() => { levelMenu = false; editor.branchVersion(null); }}><Icon name="branch" size={14} /> Duplicate as variant</button>
           <button class="mi" onclick={() => { levelMenu = false; editor.openModal('new-level', { rename: true }); }}><Icon name="draw" size={14} /> Rename…</button>
-          <button class="mi" onclick={() => { levelMenu = false; api_reveal(); }}><Icon name="reveal" size={14} /> Show in Finder</button>
+          {#if !WEB}<button class="mi" onclick={() => { levelMenu = false; api_reveal(); }}><Icon name="reveal" size={14} /> Show in Finder</button>{/if}
           <button class="mi danger" onclick={() => { levelMenu = false; if (confirm(`Move level "${levelName}" to the project's .trash folder?`)) editor.deleteLevel(editor.levelId); }}><Icon name="trash" size={14} /> Delete level</button>
           <div class="sep"></div>
           <button class="mi" onclick={() => { levelMenu = false; editor.closeFolder(); }}><Icon name="folder" size={14} /> Open another project…</button>
@@ -104,7 +104,7 @@
 </header>
 
 <script lang="ts" module>
-  import { api } from '$lib/editor/api';
+  import { api, WEB } from '$lib/editor/api';
   function api_reveal() {
     api.reveal().catch(() => {});
   }

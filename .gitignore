@@ -4,3 +4,5 @@ build
 bin/cli.mjs
 .DS_Store
 *.log
+build-web
+.firebase

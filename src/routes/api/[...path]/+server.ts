@@ -14,12 +14,12 @@ const routes: [string, string, Handler][] = [
     root: store.root,
     recent: await store.recent(),
     home: os.homedir(),
-    project: store.root ? await store.readProject() : null,
-    levels: store.root ? await store.listLevels() : []
+    project: store.root ? await store.core.readProject() : null,
+    levels: store.root ? await store.core.listLevels() : []
   })],
   ['POST', 'open', async ({ body }) => {
     const root = await store.open(body.path, { create: !!body.create, demo: !!body.demo });
-    return { root, project: await store.readProject(), levels: await store.listLevels() };
+    return { root, project: await store.core.readProject(), levels: await store.core.listLevels() };
   }],
   ['POST', 'close', () => {
     store.root = null;
@@ -38,32 +38,32 @@ const routes: [string, string, Handler][] = [
       .sort((a, b) => a.name.localeCompare(b.name));
     return { path: p, parent: path.dirname(p) === p ? null : path.dirname(p), dirs, home: os.homedir(), isProject: fs.existsSync(path.join(p, PROJECT_FILE)) };
   }],
-  ['GET', 'project', () => store.readProject()],
+  ['GET', 'project', () => store.core.readProject()],
   ['PUT', 'project', async ({ body }) => {
     if (!body || typeof body !== 'object' || !body.tags) throw new Error('Refusing to write an invalid project');
-    await store.writeProject(body);
+    await store.core.writeProject(body);
     return { ok: true };
   }],
-  ['GET', 'levels', () => store.listLevels()],
-  ['POST', 'levels', async ({ body }) => ({ id: await store.createLevel(body.name || 'New level', body.from) })],
-  ['GET', 'levels/*', ({ params }) => store.readLevel(params[0])],
+  ['GET', 'levels', () => store.core.listLevels()],
+  ['POST', 'levels', async ({ body }) => ({ id: await store.core.createLevel(body.name || 'New level', body.from) })],
+  ['GET', 'levels/*', ({ params }) => store.core.readLevel(params[0])],
   ['PUT', 'levels/*', async ({ params, body }) => {
     if (!body || !Array.isArray(body.elements) || typeof body.name !== 'string') throw new Error('Refusing to write an invalid level');
-    await store.writeLevel(params[0], body);
+    await store.core.writeLevel(params[0], body);
     return { ok: true, time: new Date().toISOString() };
   }],
   ['DELETE', 'levels/*', async ({ params }) => {
-    await store.deleteLevel(params[0]);
+    await store.core.deleteLevel(params[0]);
     return { ok: true };
   }],
-  ['GET', 'levels/*/versions', ({ params }) => store.listVersions(params[0])],
-  ['POST', 'levels/*/versions', ({ params, body }) => store.saveVersion(params[0], body.level, body.message, !!body.handoff)],
-  ['GET', 'levels/*/versions/*', ({ params }) => store.readVersion(params[0], Number(params[1]))],
+  ['GET', 'levels/*/versions', ({ params }) => store.core.listVersions(params[0])],
+  ['POST', 'levels/*/versions', ({ params, body }) => store.core.saveVersion(params[0], body.level, body.message, !!body.handoff)],
+  ['GET', 'levels/*/versions/*', ({ params }) => store.core.readVersion(params[0], Number(params[1]))],
   ['POST', 'levels/*/baseline', async ({ params, body }) => {
-    await store.setBaseline(params[0], Number(body.n));
+    await store.core.setBaseline(params[0], Number(body.n));
     return { ok: true };
   }],
-  ['POST', 'levels/*/handoff', async ({ params, body }) => ({ dir: await store.writeHandoff(params[0], body.files) })],
+  ['POST', 'levels/*/handoff', async ({ params, body }) => ({ dir: await store.core.writeHandoff(params[0], body.files) })],
   ['POST', 'reveal', ({ body }) => {
     const target = body.path ? path.resolve(store.root ?? '/', body.path) : store.root;
     if (!target) throw new Error('nothing to reveal');

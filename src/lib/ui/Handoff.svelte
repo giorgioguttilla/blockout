@@ -1,7 +1,7 @@
 <script lang="ts">
   import { editor } from '$lib/editor/editor.svelte';
   import * as A from '$lib/editor/actions';
-  import { api } from '$lib/editor/api';
+  import { api, WEB, downloadHandoffZip } from '$lib/editor/api';
   import { diffLevels, diffSummary } from '$lib/model/diff';
   import Modal from './Modal.svelte';
   import Icon from './Icon.svelte';
@@ -70,7 +70,11 @@
       <button class="btn" onclick={() => editor.openModal(null)}>Cancel</button>
       <button class="btn primary" onclick={go} disabled={busy}>{busy ? 'Writing…' : kind === 'changes' ? 'Write CHANGES.md' : 'Write BRIEF.md'}</button>
     {:else}
-      <button class="btn" onclick={() => api.reveal(res.dir)}><Icon name="reveal" size={14} /> Show files</button>
+      {#if WEB}
+        <button class="btn" onclick={() => downloadHandoffZip(editor.levelId, editor.levelId)}><Icon name="down" size={14} /> Download .zip</button>
+      {:else}
+        <button class="btn" onclick={() => api.reveal(res.dir)}><Icon name="reveal" size={14} /> Show files</button>
+      {/if}
       <button class="btn primary" onclick={copy}><Icon name={copied ? 'check' : 'copy'} size={14} /> {copied ? 'Copied' : 'Copy prompt'}</button>
     {/if}
   {/snippet}

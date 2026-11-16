@@ -4,7 +4,16 @@ Sketch game levels in 3D with simple shapes and tags. Then hand them to an AI th
 your engine. Blockout is not a 3D modeler. It records **intent**: what goes where, at what scale, and how the
 player moves through it.
 
-## Run it
+## Use it on the web
+
+**https://blockout-5da1d7.web.app**, with nothing to install.
+
+- **Chrome / Edge:** *Open a folder on this computer* and pick your repo's `design/` folder. Blockout edits the
+  files in place (nothing is uploaded), so your coding agent sees the same files. It checks for agent edits every
+  couple of seconds. After a reload the browser asks once to let it edit the folder again.
+- **Other browsers:** projects are stored in the browser. *Hand off* then gives you a `.zip` to unzip into your repo.
+
+## Run it locally
 
 ```bash
 npm install
@@ -108,7 +117,12 @@ blockout validate <folder>
 npm run check   # svelte-check (types)
 npm test        # vitest: serialization, diff, physics, settings doc
 npm run build   # adapter-node server + bundled CLI
+npm run dev:web # the hosted (server-less) version, locally
+npm run deploy  # build the web version and deploy it to Firebase Hosting
 ```
+
+The project-folder logic lives in `src/lib/store/core.ts` and runs on a small file interface. The local server
+uses Node's `fs`. The web build uses the File System Access API (real folders) or IndexedDB (in-browser projects).
 
 Stack: SvelteKit 3 / Svelte 5, three.js (used directly), three-mesh-bvh (picking, walk-mode collision,
 analysis), three-bvh-csg (cuts and hollow rooms). The local Node server only reads and writes inside the

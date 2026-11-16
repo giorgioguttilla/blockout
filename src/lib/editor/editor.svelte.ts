@@ -49,6 +49,8 @@ let toastId = 1;
 export class Editor {
   // ------------------------------------------------------------ session
   root = $state<string | null>(null);
+  /** human label for the open project (web build: folder name / in-browser) */
+  rootLabel = $state('');
   recent = $state.raw<string[]>([]);
   home = $state('');
   ready = $state(false);
@@ -129,6 +131,7 @@ export class Editor {
 
   async openFolder(path: string, opts: { create?: boolean; demo?: boolean } = {}) {
     const r = await api.open(path, opts);
+    this.rootLabel = r.label ?? r.root;
     await this.adopt(r.root, r.project, r.levels, opts.demo ? 'demo' : undefined);
     this.recent = [r.root, ...this.recent.filter((p) => p !== r.root)];
   }
@@ -155,6 +158,7 @@ export class Editor {
     await this.flushSave();
     const level = await api.level(id);
     this.levelId = id;
+    api.watchLevel(id);
     this.undoStack = [];
     this.redoStack = [];
     this.selection = [];
@@ -196,9 +200,7 @@ export class Editor {
   }
 
   private listenEvents() {
-    const es = new EventSource('/api/events');
-    es.onmessage = async (m) => {
-      const ev = JSON.parse(m.data);
+    api.subscribe(async (ev) => {
       if (ev.kind === 'level' && ev.id === this.levelId) {
         const disk = await api.level(ev.id).catch(() => null);
         if (!disk) return;
@@ -215,7 +217,7 @@ export class Editor {
           this.toast('Project settings reloaded from disk', 'info');
         }
       }
-    };
+    });
   }
 
   acceptExternal() {
