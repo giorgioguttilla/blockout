@@ -2,6 +2,7 @@
   import { editor } from '$lib/editor/editor.svelte';
   import { browserBackend, canOpenFolders, forgetRecent, webRecents, type WebRecent } from '$lib/store/browser';
   import Icon from './Icon.svelte';
+  import Logo from './Logo.svelte';
 
   let busy = $state(false);
   let err = $state('');
@@ -34,7 +35,7 @@
 <main>
   <section class="hero">
     <div class="logo">
-      <svg viewBox="0 0 64 64" width="56" height="56"><rect x="6" y="26" width="28" height="30" rx="2" fill="#c9ced6" /><rect x="26" y="12" width="32" height="22" rx="2" fill="#f2b94b" /><rect x="34" y="40" width="10" height="16" fill="#ff5a5f" opacity=".8" /><circle cx="50" cy="48" r="5" fill="#4da3ff" /></svg>
+      <Logo size={56} />
     </div>
     <h1>Blockout</h1>
     <p class="tag">Sketch levels in 3D, add tags for what goes where, and hand them to your AI to build.</p>

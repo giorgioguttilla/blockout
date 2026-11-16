@@ -2,6 +2,7 @@
   import { editor } from '$lib/editor/editor.svelte';
   import * as A from '$lib/editor/actions';
   import Icon from './Icon.svelte';
+  import Logo from './Logo.svelte';
   import Menu from './Menu.svelte';
 
   let levelMenu = $state(false);
@@ -29,7 +30,7 @@
 <header class="top">
   <div class="left">
     <button class="proj" onclick={() => editor.openModal('settings')} title="Project settings">
-      <svg viewBox="0 0 64 64" width="20" height="20"><rect x="6" y="26" width="28" height="30" rx="2" fill="#c9ced6" /><rect x="26" y="12" width="32" height="22" rx="2" fill="#f2b94b" /></svg>
+      <Logo size={20} />
       <span>{editor.project.name}</span>
     </button>
     <span class="faint">/</span>
